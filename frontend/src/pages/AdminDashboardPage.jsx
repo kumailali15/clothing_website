@@ -85,7 +85,9 @@ const AdminDashboardPage = ({ onNavigate }) => {
     try {
       const res = await login(loginEmail, loginPassword);
       if (res.user && (res.user.role === 'admin' || res.user.email === 'admin@shop.co')) {
-        // Successfully logged in as Admin
+        if (onNavigate) {
+          onNavigate('home');
+        }
       } else {
         setLoginError('This account does not have Admin privileges.');
       }
@@ -93,15 +95,6 @@ const AdminDashboardPage = ({ onNavigate }) => {
       setLoginError(err.message || 'Invalid admin credentials');
     } finally {
       setLoginLoading(false);
-    }
-  };
-
-  const handleUpdateStatus = async (orderId, newStatus) => {
-    try {
-      await api.updateOrderStatus(orderId, newStatus);
-      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
-    } catch (err) {
-      alert(err.message || 'Failed to update order status');
     }
   };
 
@@ -140,86 +133,91 @@ const AdminDashboardPage = ({ onNavigate }) => {
   });
 
   // ----------------------------------------------------
-  // VIEW 1: ADMIN LOGIN GATE SCREEN (App defaults to this)
+  // VIEW 1: ADMIN LOGIN GATE SCREEN (Website Light Theme)
   // ----------------------------------------------------
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden font-sans">
-        {/* Decorative Background Elements */}
-        <div className="absolute top-10 left-10 opacity-20 animate-spin" style={{ animationDuration: '25s' }}>
-          <svg width="120" height="120" viewBox="0 0 100 100" fill="none">
-            <path d="M50 0C50 27.6142 72.3858 50 100 50C72.3858 50 50 72.3858 50 100C50 72.3858 27.6142 50 0 50C27.6142 50 50 27.6142 50 0Z" fill="#FFFFFF" />
+      <div className="min-h-screen bg-[#F2F0F1] flex items-center justify-center p-4 relative overflow-hidden font-sans">
+        {/* Decorative Background Vector Elements */}
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-black/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-black/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="absolute top-12 left-12 opacity-15 hidden sm:block animate-spin" style={{ animationDuration: '30s' }}>
+          <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+            <path d="M50 0C50 27.6142 72.3858 50 100 50C72.3858 50 50 72.3858 50 100C50 72.3858 27.6142 50 0 50C27.6142 50 50 27.6142 50 0Z" fill="#000000" />
           </svg>
         </div>
-        <div className="absolute bottom-10 right-10 opacity-20 animate-spin" style={{ animationDuration: '35s' }}>
-          <svg width="180" height="180" viewBox="0 0 100 100" fill="none">
-            <path d="M50 0C50 27.6142 72.3858 50 100 50C72.3858 50 50 72.3858 50 100C50 72.3858 27.6142 50 0 50C27.6142 50 50 27.6142 50 0Z" fill="#FFFFFF" />
+        <div className="absolute bottom-12 right-12 opacity-15 hidden sm:block animate-spin" style={{ animationDuration: '40s' }}>
+          <svg width="140" height="140" viewBox="0 0 100 100" fill="none">
+            <path d="M50 0C50 27.6142 72.3858 50 100 50C72.3858 50 50 72.3858 50 100C50 72.3858 27.6142 50 0 50C27.6142 50 50 27.6142 50 0Z" fill="#000000" />
           </svg>
         </div>
 
-        <div className="max-w-md w-full bg-zinc-900 border border-zinc-800 rounded-3xl p-8 shadow-2xl relative z-10 text-white backdrop-blur-xl">
+        <div className="max-w-md w-full bg-white border border-black/10 rounded-3xl p-8 sm:p-10 shadow-2xl relative z-10 text-black">
           <div className="text-center mb-8">
-            <div className="inline-block bg-white text-black font-display font-black text-2xl tracking-tighter px-4 py-1.5 rounded-2xl mb-3 shadow-lg">
+            <div className="inline-block bg-black text-white font-display font-black text-xl tracking-tighter px-5 py-1.5 rounded-full mb-4 shadow-md">
               SHOP.CO
             </div>
-            <h1 className="font-display text-2xl font-black uppercase tracking-tight text-white">
-              ADMIN CONTROL CENTER
+            <h1 className="font-display text-3xl font-black uppercase tracking-tight text-black">
+              LOGIN AS ADMIN
             </h1>
-            <p className="text-xs text-zinc-400 mt-1">
-              Enter Administrator credentials to unlock the Dashboard & Website
+            <p className="text-xs text-black/60 font-medium mt-2">
+              Enter Administrator credentials to unlock full store & management access
             </p>
           </div>
 
-          {/* Credentials Info Box */}
-          <div className="mb-6 p-4 bg-zinc-800/80 border border-zinc-700/60 rounded-2xl text-xs text-zinc-300">
-            <div className="font-bold flex items-center gap-1.5 mb-1.5 text-white uppercase tracking-wider text-[10px]">
-              <ShieldCheck size={14} className="text-emerald-400" /> Default Admin Credentials:
+          {/* Credentials Info Badge */}
+          <div className="mb-6 p-4 bg-[#F2F0F1] border border-black/10 rounded-2xl text-xs text-black/80">
+            <div className="font-bold flex items-center gap-1.5 mb-2 text-black uppercase tracking-wider text-[11px]">
+              <ShieldCheck size={16} className="text-black" /> Default Admin Credentials:
             </div>
-            <div className="flex justify-between py-1 border-b border-zinc-700/50">
-              <span className="text-zinc-400">Email:</span>
-              <strong className="font-mono text-emerald-400">admin@shop.co</strong>
+            <div className="flex justify-between py-1 border-b border-black/10">
+              <span className="text-black/60 font-medium">Email:</span>
+              <strong className="font-mono text-black">admin@shop.co</strong>
             </div>
             <div className="flex justify-between py-1 pt-1.5">
-              <span className="text-zinc-400">Password:</span>
-              <strong className="font-mono text-emerald-400">admin123456</strong>
+              <span className="text-black/60 font-medium">Password:</span>
+              <strong className="font-mono text-black">admin123456</strong>
             </div>
           </div>
 
           {loginError && (
-            <div className="mb-4 p-3 bg-red-950/80 border border-red-800 text-red-300 text-xs rounded-xl font-medium">
-              {loginError}
+            <div className="mb-5 p-3.5 bg-red-50 border border-red-200 text-red-700 text-xs rounded-2xl font-bold flex items-center gap-2">
+              <span>⚠️</span> {loginError}
             </div>
           )}
 
-          <form onSubmit={handleAdminLogin} className="space-y-4">
+          <form onSubmit={handleAdminLogin} className="space-y-5">
             <div>
-              <label className="block text-[11px] font-extrabold uppercase text-zinc-400 mb-1.5 tracking-wider">
-                Admin Email Address
+              <label className="block text-[11px] font-black uppercase text-black/70 mb-2 tracking-wider">
+                Email Address
               </label>
-              <div className="flex items-center bg-zinc-800 rounded-2xl px-4 py-3 gap-2.5 border border-zinc-700 focus-within:border-white transition-all">
-                <Mail size={18} className="text-zinc-400" />
+              <div className="flex items-center bg-[#F2F0F1] rounded-2xl px-4 py-3.5 gap-3 border border-black/10 focus-within:border-black transition-all">
+                <Mail size={18} className="text-black/50" />
                 <input
                   type="email"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
+                  placeholder="admin@shop.co"
                   required
-                  className="w-full bg-transparent border-none text-sm font-medium text-white focus:outline-none placeholder-zinc-500"
+                  className="w-full bg-transparent border-none text-sm font-semibold text-black focus:outline-none placeholder-black/30"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-[11px] font-extrabold uppercase text-zinc-400 mb-1.5 tracking-wider">
-                Admin Password
+              <label className="block text-[11px] font-black uppercase text-black/70 mb-2 tracking-wider">
+                Password
               </label>
-              <div className="flex items-center bg-zinc-800 rounded-2xl px-4 py-3 gap-2.5 border border-zinc-700 focus-within:border-white transition-all">
-                <Lock size={18} className="text-zinc-400" />
+              <div className="flex items-center bg-[#F2F0F1] rounded-2xl px-4 py-3.5 gap-3 border border-black/10 focus-within:border-black transition-all">
+                <Lock size={18} className="text-black/50" />
                 <input
                   type="password"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="••••••••"
                   required
-                  className="w-full bg-transparent border-none text-sm font-medium text-white focus:outline-none placeholder-zinc-500"
+                  className="w-full bg-transparent border-none text-sm font-semibold text-black focus:outline-none placeholder-black/30"
                 />
               </div>
             </div>
@@ -227,9 +225,9 @@ const AdminDashboardPage = ({ onNavigate }) => {
             <button
               type="submit"
               disabled={loginLoading}
-              className="w-full bg-white text-black font-extrabold py-4 rounded-full hover:bg-zinc-200 transition-all text-sm shadow-xl flex items-center justify-center gap-2 mt-4 uppercase tracking-wider"
+              className="w-full bg-black text-white font-black py-4 rounded-full hover:bg-black/90 active:scale-[0.99] transition-all text-sm shadow-xl flex items-center justify-center gap-2 mt-6 uppercase tracking-wider"
             >
-              {loginLoading ? 'Unlocking Console...' : 'Unlock Admin Console'} <ArrowRight size={18} />
+              {loginLoading ? 'Authenticating...' : 'Login as Admin'} <ArrowRight size={18} />
             </button>
           </form>
         </div>
