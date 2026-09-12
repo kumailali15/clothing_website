@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, User, Menu, X, ChevronDown, LogOut, Check } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, ChevronDown, LogOut, Check, Settings } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 
-const Navbar = ({ onNavigate, currentPage }) => {
+const Navbar = ({ onNavigate, currentPage, onOpenAdmin }) => {
   const { totalItemCount } = useCart();
   const { user, openAuthModal, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -314,6 +314,25 @@ const Navbar = ({ onNavigate, currentPage }) => {
 
         {/* Action Icons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {/* Admin CRUD Dashboard Trigger */}
+          <button
+            onClick={onOpenAdmin}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              backgroundColor: '#000000',
+              color: '#ffffff',
+              padding: '6px 14px',
+              borderRadius: 'var(--radius-pill)',
+              fontSize: '0.82rem',
+              fontWeight: 700
+            }}
+            title="Manage Products (CRUD & Uploads)"
+          >
+            <Settings size={14} /> Admin
+          </button>
+
           {/* Mobile search trigger */}
           <button
             className="mobile-search-btn"

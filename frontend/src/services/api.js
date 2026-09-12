@@ -106,5 +106,50 @@ export const api = {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Subscription failed');
     return data;
+  },
+
+  // Image Upload (Multer)
+  async uploadImage(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+    const res = await fetch(`${API_BASE_URL}/upload`, {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to upload image');
+    return data;
+  },
+
+  // Product CRUD
+  async createProduct(productData) {
+    const res = await fetch(`${API_BASE_URL}/products`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(productData)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to create product');
+    return data;
+  },
+
+  async updateProduct(id, productData) {
+    const res = await fetch(`${API_BASE_URL}/products/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(productData)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to update product');
+    return data;
+  },
+
+  async deleteProduct(id) {
+    const res = await fetch(`${API_BASE_URL}/products/${id}`, {
+      method: 'DELETE'
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to delete product');
+    return data;
   }
 };

@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
+const { connectDB } = require('./config/db');
+const uploadRoute = require('./routes/upload');
+
 const productsRoute = require('./routes/products');
 const reviewsRoute = require('./routes/reviews');
 const authRoute = require('./routes/auth');
@@ -10,6 +13,9 @@ const couponsRoute = require('./routes/coupons');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Connect to MongoDB if configured
+connectDB();
 
 // Middleware
 app.use(cors({
@@ -40,7 +46,11 @@ app.post('/api/newsletter', (req, res) => {
   res.json({ message: 'Subscribed successfully! Check your inbox for your 20% discount coupon.' });
 });
 
+// Serve uploaded images statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Mount routes
+app.use('/api/upload', uploadRoute);
 app.use('/api/products', productsRoute);
 app.use('/api/reviews', reviewsRoute);
 app.use('/api/auth', authRoute);

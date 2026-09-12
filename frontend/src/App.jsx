@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider, useCart } from './context/CartContext';
 import TopBanner from './components/TopBanner';
@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import NewsletterBanner from './components/NewsletterBanner';
 import Footer from './components/Footer';
 import AuthModal from './components/AuthModal';
+import AdminProductModal from './components/AdminProductModal';
 
 import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
@@ -26,6 +27,8 @@ const GlobalToast = () => {
 function MainApp() {
   const [currentPage, setCurrentPage] = useState('home');
   const [pageParams, setPageParams] = useState({});
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleNavigate = (page, params = {}) => {
     setCurrentPage(page);
@@ -39,16 +42,21 @@ function MainApp() {
       <TopBanner />
 
       {/* Main Navbar */}
-      <Navbar onNavigate={handleNavigate} currentPage={currentPage} />
+      <Navbar
+        onNavigate={handleNavigate}
+        currentPage={currentPage}
+        onOpenAdmin={() => setIsAdminModalOpen(true)}
+      />
 
       {/* Dynamic Page Views */}
       <main style={{ flex: 1 }}>
         {currentPage === 'home' && (
-          <HomePage onNavigate={handleNavigate} />
+          <HomePage key={refreshKey} onNavigate={handleNavigate} />
         )}
 
         {currentPage === 'shop' && (
           <CategoryPage
+            key={refreshKey}
             initialFilter={pageParams.filter || {}}
             onNavigate={handleNavigate}
           />
@@ -56,6 +64,7 @@ function MainApp() {
 
         {currentPage === 'product' && (
           <ProductDetailPage
+            key={refreshKey}
             productId={pageParams.productId || 'prod-1'}
             onNavigate={handleNavigate}
           />
@@ -74,6 +83,13 @@ function MainApp() {
 
       {/* Authentication Modal */}
       <AuthModal />
+
+      {/* Admin CRUD & Multer Upload Modal */}
+      <AdminProductModal
+        isOpen={isAdminModalOpen}
+        onClose={() => setIsAdminModalOpen(false)}
+        onProductChanged={() => setRefreshKey(prev => prev + 1)}
+      />
 
       {/* Toast Notification */}
       <GlobalToast />

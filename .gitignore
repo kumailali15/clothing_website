@@ -1,0 +1,23 @@
+# Node modules
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Build output
+frontend/dist/
+dist/
+
+# Environment files
+.env
+.env.local
+backend/.env
+
+# Temporary upload test files
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# System & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
