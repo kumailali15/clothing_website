@@ -19,7 +19,13 @@ import {
   LogOut,
   RefreshCw,
   Search,
-  Eye
+  Eye,
+  Globe,
+  Sparkles,
+  Edit3,
+  SlidersHorizontal,
+  ChevronRight,
+  Check
 } from 'lucide-react';
 
 const AdminDashboardPage = ({ onNavigate }) => {
@@ -40,6 +46,8 @@ const AdminDashboardPage = ({ onNavigate }) => {
   const [loadingData, setLoadingData] = useState(false);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [selectedOrderDetails, setSelectedOrderDetails] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
 
   const isAdmin = user && (user.role === 'admin' || user.email === 'admin@shop.co');
 
@@ -77,7 +85,7 @@ const AdminDashboardPage = ({ onNavigate }) => {
     try {
       const res = await login(loginEmail, loginPassword);
       if (res.user && (res.user.role === 'admin' || res.user.email === 'admin@shop.co')) {
-        // Logged in as Admin
+        // Successfully logged in as Admin
       } else {
         setLoginError('This account does not have Admin privileges.');
       }
@@ -107,75 +115,111 @@ const AdminDashboardPage = ({ onNavigate }) => {
     }
   };
 
-  // Calculations for Overview Tab
+  const handleDeleteProduct = async (id, title) => {
+    if (!window.confirm(`Are you sure you want to delete "${title}"?`)) return;
+    try {
+      await api.deleteProduct(id);
+      setProducts(prev => prev.filter(p => p.id !== id));
+    } catch (err) {
+      alert(err.message || 'Failed to delete product');
+    }
+  };
+
+  // Analytics Calculations
   const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
   const totalOrdersCount = orders.length;
   const totalProductsCount = products.length;
   const totalUsersCount = usersList.length || 2;
 
+  // Filtered products list for search
+  const filteredProducts = products.filter(p => {
+    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          p.category.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = categoryFilter === 'all' || p.category.toLowerCase() === categoryFilter.toLowerCase();
+    return matchesSearch && matchesCategory;
+  });
+
   // ----------------------------------------------------
-  // VIEW 1: ADMIN LOGIN SCREEN (If not logged in as Admin)
+  // VIEW 1: ADMIN LOGIN GATE SCREEN (App defaults to this)
   // ----------------------------------------------------
   if (!isAdmin) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center p-4 bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl border border-gray-100 p-8">
-          <div className="text-center mb-6">
-            <div className="w-14 h-14 bg-black text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md">
-              <ShieldCheck size={32} />
+      <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden font-sans">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-10 left-10 opacity-20 animate-spin" style={{ animationDuration: '25s' }}>
+          <svg width="120" height="120" viewBox="0 0 100 100" fill="none">
+            <path d="M50 0C50 27.6142 72.3858 50 100 50C72.3858 50 50 72.3858 50 100C50 72.3858 27.6142 50 0 50C27.6142 50 50 27.6142 50 0Z" fill="#FFFFFF" />
+          </svg>
+        </div>
+        <div className="absolute bottom-10 right-10 opacity-20 animate-spin" style={{ animationDuration: '35s' }}>
+          <svg width="180" height="180" viewBox="0 0 100 100" fill="none">
+            <path d="M50 0C50 27.6142 72.3858 50 100 50C72.3858 50 50 72.3858 50 100C50 72.3858 27.6142 50 0 50C27.6142 50 50 27.6142 50 0Z" fill="#FFFFFF" />
+          </svg>
+        </div>
+
+        <div className="max-w-md w-full bg-zinc-900 border border-zinc-800 rounded-3xl p-8 shadow-2xl relative z-10 text-white backdrop-blur-xl">
+          <div className="text-center mb-8">
+            <div className="inline-block bg-white text-black font-display font-black text-2xl tracking-tighter px-4 py-1.5 rounded-2xl mb-3 shadow-lg">
+              SHOP.CO
             </div>
-            <h1 className="font-display text-2xl font-black uppercase text-black tracking-tight">
-              Admin Portal
+            <h1 className="font-display text-2xl font-black uppercase tracking-tight text-white">
+              ADMIN CONTROL CENTER
             </h1>
-            <p className="text-xs text-gray-500 mt-1">
-              Sign in with administrator credentials to manage SHOP.CO
+            <p className="text-xs text-zinc-400 mt-1">
+              Enter Administrator credentials to unlock the Dashboard & Website
             </p>
           </div>
 
-          {/* Credentials Hint Box */}
-          <div className="mb-6 p-3.5 bg-amber-50 border border-amber-200 rounded-2xl text-xs text-amber-900 leading-relaxed">
-            <div className="font-bold flex items-center gap-1.5 mb-1 text-amber-950">
-              <Lock size={14} /> Default Admin Credentials:
+          {/* Credentials Info Box */}
+          <div className="mb-6 p-4 bg-zinc-800/80 border border-zinc-700/60 rounded-2xl text-xs text-zinc-300">
+            <div className="font-bold flex items-center gap-1.5 mb-1.5 text-white uppercase tracking-wider text-[10px]">
+              <ShieldCheck size={14} className="text-emerald-400" /> Default Admin Credentials:
             </div>
-            <div>Email: <strong className="font-mono text-amber-950">admin@shop.co</strong></div>
-            <div>Password: <strong className="font-mono text-amber-950">admin123456</strong></div>
+            <div className="flex justify-between py-1 border-b border-zinc-700/50">
+              <span className="text-zinc-400">Email:</span>
+              <strong className="font-mono text-emerald-400">admin@shop.co</strong>
+            </div>
+            <div className="flex justify-between py-1 pt-1.5">
+              <span className="text-zinc-400">Password:</span>
+              <strong className="font-mono text-emerald-400">admin123456</strong>
+            </div>
           </div>
 
           {loginError && (
-            <div className="mb-4 p-3 bg-red-50 text-red-600 text-xs rounded-xl font-medium border border-red-200">
+            <div className="mb-4 p-3 bg-red-950/80 border border-red-800 text-red-300 text-xs rounded-xl font-medium">
               {loginError}
             </div>
           )}
 
           <form onSubmit={handleAdminLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                Admin Email
+              <label className="block text-[11px] font-extrabold uppercase text-zinc-400 mb-1.5 tracking-wider">
+                Admin Email Address
               </label>
-              <div className="flex items-center bg-gray-100 rounded-2xl px-4 py-3 gap-2 border border-transparent focus-within:border-black">
-                <Mail size={18} className="text-gray-400" />
+              <div className="flex items-center bg-zinc-800 rounded-2xl px-4 py-3 gap-2.5 border border-zinc-700 focus-within:border-white transition-all">
+                <Mail size={18} className="text-zinc-400" />
                 <input
                   type="email"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
                   required
-                  className="w-full bg-transparent border-none text-sm font-medium text-black focus:outline-none"
+                  className="w-full bg-transparent border-none text-sm font-medium text-white focus:outline-none placeholder-zinc-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                Password
+              <label className="block text-[11px] font-extrabold uppercase text-zinc-400 mb-1.5 tracking-wider">
+                Admin Password
               </label>
-              <div className="flex items-center bg-gray-100 rounded-2xl px-4 py-3 gap-2 border border-transparent focus-within:border-black">
-                <Lock size={18} className="text-gray-400" />
+              <div className="flex items-center bg-zinc-800 rounded-2xl px-4 py-3 gap-2.5 border border-zinc-700 focus-within:border-white transition-all">
+                <Lock size={18} className="text-zinc-400" />
                 <input
                   type="password"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   required
-                  className="w-full bg-transparent border-none text-sm font-medium text-black focus:outline-none"
+                  className="w-full bg-transparent border-none text-sm font-medium text-white focus:outline-none placeholder-zinc-500"
                 />
               </div>
             </div>
@@ -183,9 +227,9 @@ const AdminDashboardPage = ({ onNavigate }) => {
             <button
               type="submit"
               disabled={loginLoading}
-              className="w-full bg-black text-white font-bold py-3.5 rounded-full hover:bg-gray-800 transition-all text-sm shadow-lg hover:shadow-xl mt-2"
+              className="w-full bg-white text-black font-extrabold py-4 rounded-full hover:bg-zinc-200 transition-all text-sm shadow-xl flex items-center justify-center gap-2 mt-4 uppercase tracking-wider"
             >
-              {loginLoading ? 'Authenticating...' : 'Access Admin Dashboard'}
+              {loginLoading ? 'Unlocking Console...' : 'Unlock Admin Console'} <ArrowRight size={18} />
             </button>
           </form>
         </div>
@@ -194,175 +238,192 @@ const AdminDashboardPage = ({ onNavigate }) => {
   }
 
   // ----------------------------------------------------
-  // VIEW 2: FULL ADMIN DASHBOARD (When Logged in as Admin)
+  // VIEW 2: ULTRA-PREMIUM HIGH-FASHION DASHBOARD (Post-Login)
   // ----------------------------------------------------
   return (
-    <div className="py-8 bg-gray-50 min-h-screen">
-      <div className="container mx-auto px-4 max-w-7xl">
-        {/* Top Dashboard Bar */}
-        <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-200 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="bg-black text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full">
-                ADMIN CONSOLE
-              </span>
-              <span className="text-xs text-gray-500 font-medium">Logged in as {user.name}</span>
-            </div>
-            <h1 className="font-display text-3xl font-black uppercase text-black tracking-tight mt-1">
-              STORE DASHBOARD
-            </h1>
+    <div className="min-h-screen bg-zinc-950 text-white font-sans pb-16">
+      {/* Top Header Bar */}
+      <header className="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-40">
+        <div className="container mx-auto px-4 max-w-7xl h-20 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <span className="font-display text-2xl font-black tracking-tighter text-white uppercase">
+              SHOP.CO
+            </span>
+            <div className="h-6 w-px bg-zinc-800 hidden sm:block" />
+            <span className="hidden sm:inline-flex items-center gap-1.5 bg-zinc-800 text-zinc-300 text-xs font-bold px-3 py-1 rounded-full border border-zinc-700">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> CONTROL CENTER
+            </span>
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Prominent Button to View Live Customer Store */}
             <button
-              onClick={fetchDashboardData}
-              className="px-4 py-2.5 rounded-full border border-gray-300 text-xs font-bold text-gray-700 hover:bg-gray-100 flex items-center gap-1.5 transition-all"
+              onClick={() => onNavigate('home')}
+              className="bg-white text-black hover:bg-zinc-200 px-5 py-2.5 rounded-full font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all uppercase tracking-wider"
+              title="Open the live public store website"
             >
-              <RefreshCw size={14} /> Refresh Data
-            </button>
-
-            <button
-              onClick={() => setIsProductModalOpen(true)}
-              className="px-5 py-2.5 rounded-full bg-black text-white text-xs font-bold hover:bg-gray-800 flex items-center gap-1.5 shadow-md transition-all"
-            >
-              <Plus size={16} /> Manage Garments
+              <Globe size={16} /> View Store Website
             </button>
 
             <button
               onClick={logout}
-              className="px-4 py-2.5 rounded-full border border-red-200 text-red-600 text-xs font-bold hover:bg-red-50 flex items-center gap-1 transition-all"
+              className="p-2.5 rounded-full border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all"
               title="Sign Out Admin"
             >
-              <LogOut size={14} /> Exit
+              <LogOut size={18} />
             </button>
           </div>
         </div>
+      </header>
 
-        {/* ANALYTICS STATS CARDS */}
+      {/* Main Dashboard Container */}
+      <main className="container mx-auto px-4 max-w-7xl pt-8">
+        {/* STATS OVERVIEW CARDS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-          {/* Card 1: Revenue */}
-          <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase text-gray-500 tracking-wider">Total Revenue</span>
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+          {/* Revenue */}
+          <div className="bg-zinc-900 border border-zinc-800/80 p-6 rounded-3xl relative overflow-hidden group hover:border-zinc-700 transition-all">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-extrabold uppercase text-zinc-400 tracking-wider">Total Revenue</span>
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center">
                 <TrendingUp size={20} />
               </div>
             </div>
-            <div className="text-3xl font-black text-black tracking-tight">${totalRevenue.toLocaleString()}</div>
-            <div className="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-1">
-              <span>Saved in Backend Database</span>
+            <div className="text-3xl font-black text-white tracking-tight">${totalRevenue.toLocaleString()}</div>
+            <div className="text-xs text-emerald-400 font-semibold mt-2 flex items-center gap-1">
+              <CheckCircle size={14} /> Database synced
             </div>
           </div>
 
-          {/* Card 2: Orders */}
-          <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase text-gray-500 tracking-wider">Total Orders</span>
-              <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+          {/* Orders */}
+          <div className="bg-zinc-900 border border-zinc-800/80 p-6 rounded-3xl relative overflow-hidden group hover:border-zinc-700 transition-all">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-extrabold uppercase text-zinc-400 tracking-wider">Total Orders</span>
+              <div className="w-10 h-10 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center">
                 <ShoppingBag size={20} />
               </div>
             </div>
-            <div className="text-3xl font-black text-black tracking-tight">{totalOrdersCount}</div>
-            <div className="text-xs text-blue-600 font-semibold mt-1">Customer purchases</div>
+            <div className="text-3xl font-black text-white tracking-tight">{totalOrdersCount}</div>
+            <div className="text-xs text-blue-400 font-semibold mt-2">Customer purchases</div>
           </div>
 
-          {/* Card 3: Products */}
-          <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase text-gray-500 tracking-wider">Catalog Garments</span>
-              <div className="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+          {/* Garments */}
+          <div className="bg-zinc-900 border border-zinc-800/80 p-6 rounded-3xl relative overflow-hidden group hover:border-zinc-700 transition-all">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-extrabold uppercase text-zinc-400 tracking-wider">Store Garments</span>
+              <div className="w-10 h-10 rounded-2xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center">
                 <Package size={20} />
               </div>
             </div>
-            <div className="text-3xl font-black text-black tracking-tight">{totalProductsCount}</div>
-            <div className="text-xs text-purple-600 font-semibold mt-1">Active inventory</div>
+            <div className="text-3xl font-black text-white tracking-tight">{totalProductsCount}</div>
+            <div className="text-xs text-purple-400 font-semibold mt-2">Active catalog items</div>
           </div>
 
-          {/* Card 4: Registered Users */}
-          <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase text-gray-500 tracking-wider">Store Users</span>
-              <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+          {/* Users */}
+          <div className="bg-zinc-900 border border-zinc-800/80 p-6 rounded-3xl relative overflow-hidden group hover:border-zinc-700 transition-all">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-extrabold uppercase text-zinc-400 tracking-wider">Registered Users</span>
+              <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center">
                 <Users size={20} />
               </div>
             </div>
-            <div className="text-3xl font-black text-black tracking-tight">{totalUsersCount}</div>
-            <div className="text-xs text-amber-600 font-semibold mt-1">Registered accounts</div>
+            <div className="text-3xl font-black text-white tracking-tight">{totalUsersCount}</div>
+            <div className="text-xs text-amber-400 font-semibold mt-2">Verified user accounts</div>
           </div>
         </div>
 
-        {/* MAIN DASHBOARD TABS NAVIGATION */}
-        <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6">
-          <div className="flex items-center gap-2 border-b border-gray-200 pb-4 mb-6 overflow-x-auto">
-            {[
-              { id: 'overview', label: 'Overview' },
-              { id: 'products', label: `Products (${products.length})` },
-              { id: 'orders', label: `Orders (${orders.length})` },
-              { id: 'reviews', label: `Reviews (${reviews.length})` },
-              { id: 'users', label: `Users (${usersList.length})` }
-            ].map((tab) => (
+        {/* MAIN NAVIGATION TABS & DASHBOARD CARD */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-xl">
+          {/* Navigation Pill Bar */}
+          <div className="flex items-center justify-between flex-wrap gap-4 border-b border-zinc-800 pb-5 mb-6">
+            <div className="flex items-center gap-2 overflow-x-auto">
+              {[
+                { id: 'overview', label: '📊 Overview' },
+                { id: 'products', label: `👕 Garments CRUD (${products.length})` },
+                { id: 'orders', label: `🛒 Customer Orders (${orders.length})` },
+                { id: 'reviews', label: `⭐ Reviews (${reviews.length})` },
+                { id: 'users', label: `👥 Users (${usersList.length})` }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-5 py-2.5 rounded-full font-extrabold text-xs uppercase tracking-wider transition-all whitespace-nowrap ${
+                    activeTab === tab.id
+                      ? 'bg-white text-black shadow-lg scale-105'
+                      : 'bg-zinc-800/60 text-zinc-400 hover:text-white hover:bg-zinc-800'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
               <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all whitespace-nowrap ${
-                  activeTab === tab.id
-                    ? 'bg-black text-white shadow-md'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
+                onClick={fetchDashboardData}
+                className="p-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-full transition-all"
+                title="Refresh database data"
               >
-                {tab.label}
+                <RefreshCw size={16} />
               </button>
-            ))}
+              <button
+                onClick={() => setIsProductModalOpen(true)}
+                className="bg-white text-black hover:bg-zinc-200 px-4 py-2.5 rounded-full text-xs font-black uppercase flex items-center gap-1.5 transition-all"
+              >
+                <Plus size={16} /> Add Garment (Multer Upload)
+              </button>
+            </div>
           </div>
 
           {/* TAB 1: OVERVIEW & RECENT ACTIVITY */}
           {activeTab === 'overview' && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="font-bold text-lg text-black">Recent Orders Activity</h3>
-                <button onClick={() => setActiveTab('orders')} className="text-xs font-bold text-black underline flex items-center gap-1">
-                  View All Orders <ArrowRight size={14} />
+                <h2 className="text-xl font-black uppercase text-white font-display">
+                  Recent Orders Activity
+                </h2>
+                <button onClick={() => setActiveTab('orders')} className="text-xs font-bold text-zinc-400 hover:text-white flex items-center gap-1">
+                  View All Orders <ChevronRight size={14} />
                 </button>
               </div>
 
               {orders.length === 0 ? (
-                <div className="p-8 text-center text-gray-500 bg-gray-50 rounded-2xl">
-                  No orders placed yet.
+                <div className="p-12 text-center text-zinc-500 bg-zinc-950/60 rounded-2xl border border-zinc-800">
+                  No customer orders recorded yet.
                 </div>
               ) : (
-                <div className="overflow-x-auto border border-gray-200 rounded-2xl">
-                  <table className="w-full text-left text-sm text-gray-700">
-                    <thead className="bg-gray-100 text-xs font-extrabold uppercase text-gray-900 border-b">
+                <div className="overflow-x-auto border border-zinc-800 rounded-2xl">
+                  <table className="w-full text-left text-sm text-zinc-300">
+                    <thead className="bg-zinc-800/60 text-xs font-black uppercase text-zinc-400 border-b border-zinc-800">
                       <tr>
                         <th className="p-4">Order ID</th>
                         <th className="p-4">Customer</th>
                         <th className="p-4">Items</th>
-                        <th className="p-4">Total</th>
+                        <th className="p-4">Total Amount</th>
                         <th className="p-4">Status</th>
-                        <th className="p-4 text-right">Action</th>
+                        <th className="p-4 text-right">Inspect</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-zinc-800/60">
                       {orders.slice(0, 5).map((order) => (
-                        <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="p-4 font-mono font-bold text-black">{order.id}</td>
+                        <tr key={order.id} className="hover:bg-zinc-800/40 transition-colors">
+                          <td className="p-4 font-mono font-bold text-white">{order.id}</td>
                           <td className="p-4">
-                            <div className="font-bold text-black">{order.customer?.fullName}</div>
-                            <div className="text-xs text-gray-500">{order.customer?.city}, {order.customer?.country}</div>
+                            <div className="font-bold text-white">{order.customer?.fullName}</div>
+                            <div className="text-xs text-zinc-400">{order.customer?.city}, {order.customer?.country}</div>
                           </td>
-                          <td className="p-4 text-xs font-medium">
+                          <td className="p-4 text-xs font-medium text-zinc-400">
                             {order.items?.length} item(s)
                           </td>
-                          <td className="p-4 font-black text-black">${order.total}</td>
+                          <td className="p-4 font-black text-white">${order.total}</td>
                           <td className="p-4 text-xs">
-                            <span className="px-3 py-1 rounded-full font-extrabold bg-green-100 text-green-800">
+                            <span className="px-3 py-1 rounded-full font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                               {order.status || 'Confirmed'}
                             </span>
                           </td>
                           <td className="p-4 text-right">
                             <button
                               onClick={() => setSelectedOrderDetails(order)}
-                              className="text-xs font-bold text-black hover:underline"
+                              className="text-xs font-bold text-white hover:underline bg-zinc-800 px-3 py-1.5 rounded-lg"
                             >
                               Details
                             </button>
@@ -376,22 +437,40 @@ const AdminDashboardPage = ({ onNavigate }) => {
             </div>
           )}
 
-          {/* TAB 2: PRODUCTS CRUD MANAGEMENT */}
+          {/* TAB 2: PRODUCTS CRUD TABLE */}
           {activeTab === 'products' && (
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-lg text-black">All Store Products</h3>
-                <button
-                  onClick={() => setIsProductModalOpen(true)}
-                  className="bg-black text-white px-4 py-2 rounded-full text-xs font-bold flex items-center gap-1 hover:bg-gray-800"
-                >
-                  <Plus size={14} /> Add Product with Multer
-                </button>
+              {/* Search and Category Filter Strip */}
+              <div className="flex items-center justify-between flex-wrap gap-4 mb-5">
+                <div className="flex items-center gap-3 flex-1 max-w-md bg-zinc-800/80 border border-zinc-700/60 rounded-2xl px-4 py-2.5">
+                  <Search size={18} className="text-zinc-400" />
+                  <input
+                    type="text"
+                    placeholder="Search garments by name or category..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="bg-transparent border-none w-full text-xs text-white placeholder-zinc-400 focus:outline-none"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {['all', 't-shirts', 'jeans', 'shirts', 'hoodies', 'shorts', 'jackets'].map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setCategoryFilter(cat)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase transition-all ${
+                        categoryFilter === cat ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="overflow-x-auto border border-gray-200 rounded-2xl">
-                <table className="w-full text-left text-sm text-gray-700">
-                  <thead className="bg-gray-100 text-xs font-extrabold uppercase text-gray-900 border-b">
+              <div className="overflow-x-auto border border-zinc-800 rounded-2xl">
+                <table className="w-full text-left text-sm text-zinc-300">
+                  <thead className="bg-zinc-800/60 text-xs font-black uppercase text-zinc-400 border-b border-zinc-800">
                     <tr>
                       <th className="p-4">Garment</th>
                       <th className="p-4">Category</th>
@@ -401,36 +480,45 @@ const AdminDashboardPage = ({ onNavigate }) => {
                       <th className="p-4 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {products.map((prod) => (
-                      <tr key={prod.id} className="hover:bg-gray-50 transition-colors">
+                  <tbody className="divide-y divide-zinc-800/60">
+                    {filteredProducts.map((prod) => (
+                      <tr key={prod.id} className="hover:bg-zinc-800/40 transition-colors">
                         <td className="p-4 flex items-center gap-3">
                           <img
                             src={prod.images && prod.images[0] ? prod.images[0] : ''}
                             alt={prod.title}
-                            className="w-12 h-12 rounded-xl object-cover border bg-gray-100"
+                            className="w-12 h-12 rounded-xl object-cover border border-zinc-700 bg-zinc-800"
                           />
                           <div>
-                            <div className="font-extrabold text-black text-sm">{prod.title}</div>
-                            <div className="text-xs text-gray-500">ID: {prod.id}</div>
+                            <div className="font-extrabold text-white text-sm">{prod.title}</div>
+                            <div className="text-xs text-zinc-500 font-mono">ID: {prod.id}</div>
                           </div>
                         </td>
-                        <td className="p-4 text-xs font-bold uppercase text-gray-600">{prod.category}</td>
-                        <td className="p-4 text-xs font-semibold text-gray-600">{prod.dressStyle}</td>
-                        <td className="p-4 font-black text-black">
+                        <td className="p-4 text-xs font-bold uppercase text-zinc-400">{prod.category}</td>
+                        <td className="p-4 text-xs font-semibold text-zinc-400">{prod.dressStyle}</td>
+                        <td className="p-4 font-black text-white">
                           ${prod.price}
                           {prod.discount && (
-                            <span className="ml-1 text-xs text-red-500 font-bold">(-{prod.discount}%)</span>
+                            <span className="ml-1.5 text-xs text-red-400 font-bold">(-{prod.discount}%)</span>
                           )}
                         </td>
-                        <td className="p-4 text-xs font-bold text-gray-700">{prod.stock || 20}</td>
+                        <td className="p-4 text-xs font-bold text-zinc-300">{prod.stock || 20}</td>
                         <td className="p-4 text-right">
-                          <button
-                            onClick={() => setIsProductModalOpen(true)}
-                            className="px-3 py-1.5 bg-black text-white text-xs font-bold rounded-lg hover:bg-gray-800"
-                          >
-                            Edit / Delete
-                          </button>
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => setIsProductModalOpen(true)}
+                              className="px-3 py-1.5 bg-white text-black text-xs font-bold rounded-lg hover:bg-zinc-200 transition-all"
+                            >
+                              Edit / Upload
+                            </button>
+                            <button
+                              onClick={() => handleDeleteProduct(prod.id, prod.title)}
+                              className="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-950/40 rounded-lg transition-all"
+                              title="Delete product"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -443,42 +531,44 @@ const AdminDashboardPage = ({ onNavigate }) => {
           {/* TAB 3: ORDERS MANAGEMENT */}
           {activeTab === 'orders' && (
             <div>
-              <h3 className="font-bold text-lg text-black mb-4">Manage Orders</h3>
+              <h2 className="text-xl font-black uppercase text-white font-display mb-4">
+                Manage Orders & Shipping Status
+              </h2>
 
-              <div className="overflow-x-auto border border-gray-200 rounded-2xl">
-                <table className="w-full text-left text-sm text-gray-700">
-                  <thead className="bg-gray-100 text-xs font-extrabold uppercase text-gray-900 border-b">
+              <div className="overflow-x-auto border border-zinc-800 rounded-2xl">
+                <table className="w-full text-left text-sm text-zinc-300">
+                  <thead className="bg-zinc-800/60 text-xs font-black uppercase text-zinc-400 border-b border-zinc-800">
                     <tr>
                       <th className="p-4">Order ID</th>
                       <th className="p-4">Customer Details</th>
-                      <th className="p-4">Items</th>
-                      <th className="p-4">Total</th>
-                      <th className="p-4">Update Status</th>
-                      <th className="p-4 text-right">Details</th>
+                      <th className="p-4">Items Summary</th>
+                      <th className="p-4">Total Amount</th>
+                      <th className="p-4">Status Dropdown</th>
+                      <th className="p-4 text-right">Inspect</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-zinc-800/60">
                     {orders.map((order) => (
-                      <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                        <td className="p-4 font-mono font-bold text-black">{order.id}</td>
+                      <tr key={order.id} className="hover:bg-zinc-800/40 transition-colors">
+                        <td className="p-4 font-mono font-bold text-white">{order.id}</td>
                         <td className="p-4">
-                          <div className="font-bold text-black">{order.customer?.fullName}</div>
-                          <div className="text-xs text-gray-500">{order.customer?.email}</div>
-                          <div className="text-xs text-gray-400">{order.customer?.phone}</div>
+                          <div className="font-bold text-white">{order.customer?.fullName}</div>
+                          <div className="text-xs text-zinc-400">{order.customer?.email}</div>
+                          <div className="text-xs text-zinc-500">{order.customer?.phone}</div>
                         </td>
                         <td className="p-4 text-xs">
                           {order.items?.map(it => (
-                            <div key={it.productId} className="font-medium text-gray-800">
+                            <div key={it.productId} className="font-medium text-zinc-300">
                               {it.quantity}x {it.title} ({it.size})
                             </div>
                           ))}
                         </td>
-                        <td className="p-4 font-black text-black">${order.total}</td>
+                        <td className="p-4 font-black text-white">${order.total}</td>
                         <td className="p-4">
                           <select
                             value={order.status || 'Confirmed'}
                             onChange={(e) => handleUpdateStatus(order.id, e.target.value)}
-                            className="bg-gray-100 border-none text-xs font-bold rounded-xl px-3 py-1.5 text-black focus:ring-2 focus:ring-black cursor-pointer"
+                            className="bg-zinc-800 border border-zinc-700 text-xs font-bold rounded-xl px-3 py-1.5 text-white focus:outline-none cursor-pointer"
                           >
                             <option value="Confirmed">Confirmed</option>
                             <option value="Processing">Processing</option>
@@ -489,8 +579,7 @@ const AdminDashboardPage = ({ onNavigate }) => {
                         <td className="p-4 text-right">
                           <button
                             onClick={() => setSelectedOrderDetails(order)}
-                            className="p-2 text-gray-600 hover:text-black hover:bg-gray-100 rounded-lg"
-                            title="View full order info"
+                            className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg"
                           >
                             <Eye size={18} />
                           </button>
@@ -506,24 +595,26 @@ const AdminDashboardPage = ({ onNavigate }) => {
           {/* TAB 4: REVIEWS MODERATION */}
           {activeTab === 'reviews' && (
             <div>
-              <h3 className="font-bold text-lg text-black mb-4">Customer Reviews Moderation</h3>
+              <h2 className="text-xl font-black uppercase text-white font-display mb-4">
+                Customer Reviews Moderation
+              </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {reviews.map((rev) => (
-                  <div key={rev.id} className="p-5 border border-gray-200 rounded-2xl bg-white relative">
+                  <div key={rev.id} className="p-5 border border-zinc-800 rounded-2xl bg-zinc-950/60 relative">
                     <div className="flex items-center justify-between mb-2">
                       <StarRating rating={rev.rating} showScore={false} size={16} />
                       <button
                         onClick={() => handleDeleteReview(rev.id)}
-                        className="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded-lg"
+                        className="text-red-400 hover:text-red-300 p-1 hover:bg-red-950/40 rounded-lg"
                         title="Delete review"
                       >
                         <Trash2 size={16} />
                       </button>
                     </div>
-                    <div className="font-bold text-sm text-black">{rev.author}</div>
-                    <p className="text-xs text-gray-600 mt-1 italic">"{rev.content}"</p>
-                    <div className="text-[10px] text-gray-400 mt-3">{rev.date || 'Recent'}</div>
+                    <div className="font-bold text-sm text-white">{rev.author}</div>
+                    <p className="text-xs text-zinc-400 mt-1 italic">"{rev.content}"</p>
+                    <div className="text-[10px] text-zinc-500 mt-3">{rev.date || 'Recent'}</div>
                   </div>
                 ))}
               </div>
@@ -533,11 +624,13 @@ const AdminDashboardPage = ({ onNavigate }) => {
           {/* TAB 5: USERS LIST */}
           {activeTab === 'users' && (
             <div>
-              <h3 className="font-bold text-lg text-black mb-4">Registered Store Accounts</h3>
+              <h2 className="text-xl font-black uppercase text-white font-display mb-4">
+                Registered User Accounts
+              </h2>
 
-              <div className="overflow-x-auto border border-gray-200 rounded-2xl">
-                <table className="w-full text-left text-sm text-gray-700">
-                  <thead className="bg-gray-100 text-xs font-extrabold uppercase text-gray-900 border-b">
+              <div className="overflow-x-auto border border-zinc-800 rounded-2xl">
+                <table className="w-full text-left text-sm text-zinc-300">
+                  <thead className="bg-zinc-800/60 text-xs font-black uppercase text-zinc-400 border-b border-zinc-800">
                     <tr>
                       <th className="p-4">Name</th>
                       <th className="p-4">Email</th>
@@ -545,19 +638,19 @@ const AdminDashboardPage = ({ onNavigate }) => {
                       <th className="p-4">User ID</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-zinc-800/60">
                     {usersList.map((usr) => (
-                      <tr key={usr.id} className="hover:bg-gray-50">
-                        <td className="p-4 font-bold text-black">{usr.name}</td>
-                        <td className="p-4 text-xs font-medium text-gray-600">{usr.email}</td>
+                      <tr key={usr.id} className="hover:bg-zinc-800/40">
+                        <td className="p-4 font-bold text-white">{usr.name}</td>
+                        <td className="p-4 text-xs font-medium text-zinc-400">{usr.email}</td>
                         <td className="p-4 text-xs">
-                          <span className={`px-2.5 py-0.5 rounded-full font-bold uppercase ${
-                            usr.role === 'admin' ? 'bg-black text-white' : 'bg-gray-200 text-gray-800'
+                          <span className={`px-2.5 py-0.5 rounded-full font-extrabold uppercase ${
+                            usr.role === 'admin' ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300'
                           }`}>
                             {usr.role || 'user'}
                           </span>
                         </td>
-                        <td className="p-4 text-xs font-mono text-gray-400">{usr.id}</td>
+                        <td className="p-4 text-xs font-mono text-zinc-500">{usr.id}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -566,7 +659,7 @@ const AdminDashboardPage = ({ onNavigate }) => {
             </div>
           )}
         </div>
-      </div>
+      </main>
 
       {/* Admin Product CRUD Modal */}
       <AdminProductModal
@@ -575,38 +668,38 @@ const AdminDashboardPage = ({ onNavigate }) => {
         onProductChanged={() => fetchDashboardData()}
       />
 
-      {/* Order Details View Modal */}
+      {/* Order Details Inspector Modal */}
       {selectedOrderDetails && (
         <div className="modal-overlay" onClick={() => setSelectedOrderDetails(null)}>
-          <div className="modal-content max-w-lg bg-white p-6 rounded-3xl relative" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={() => setSelectedOrderDetails(null)}>
+          <div className="modal-content max-w-lg bg-zinc-900 text-white border border-zinc-800 p-6 rounded-3xl relative" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn text-zinc-400 hover:text-white" onClick={() => setSelectedOrderDetails(null)}>
               <X size={20} />
             </button>
 
-            <h3 className="font-display text-xl font-black uppercase text-black mb-4">
-              Order #{selectedOrderDetails.id}
+            <h3 className="font-display text-xl font-black uppercase text-white mb-4">
+              Order #{selectedOrderDetails.id} Receipt
             </h3>
 
-            <div className="space-y-3 text-xs text-gray-700">
-              <div className="p-3 bg-gray-50 rounded-xl">
-                <div className="font-bold text-black mb-1">Customer Info:</div>
+            <div className="space-y-3 text-xs text-zinc-300">
+              <div className="p-3 bg-zinc-950 rounded-xl border border-zinc-800">
+                <div className="font-bold text-white mb-1">Customer Info:</div>
                 <div>Name: <strong>{selectedOrderDetails.customer?.fullName}</strong></div>
                 <div>Email: <strong>{selectedOrderDetails.customer?.email}</strong></div>
                 <div>Phone: <strong>{selectedOrderDetails.customer?.phone}</strong></div>
                 <div>Address: <strong>{selectedOrderDetails.customer?.address}, {selectedOrderDetails.customer?.city}, {selectedOrderDetails.customer?.country}</strong></div>
               </div>
 
-              <div className="p-3 bg-gray-50 rounded-xl">
-                <div className="font-bold text-black mb-1">Purchased Items:</div>
+              <div className="p-3 bg-zinc-950 rounded-xl border border-zinc-800">
+                <div className="font-bold text-white mb-1">Purchased Garments:</div>
                 {selectedOrderDetails.items?.map((it, idx) => (
-                  <div key={idx} className="flex justify-between py-1 border-b border-gray-200 last:border-none">
+                  <div key={idx} className="flex justify-between py-1 border-b border-zinc-800 last:border-none">
                     <span>{it.quantity}x {it.title} ({it.size})</span>
-                    <span className="font-bold">${it.price}</span>
+                    <span className="font-bold text-white">${it.price}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="p-3 bg-gray-100 rounded-xl flex justify-between text-sm font-bold text-black">
+              <div className="p-3 bg-zinc-800 rounded-xl flex justify-between text-sm font-bold text-white">
                 <span>Total Amount Paid:</span>
                 <span>${selectedOrderDetails.total}</span>
               </div>
@@ -614,9 +707,9 @@ const AdminDashboardPage = ({ onNavigate }) => {
 
             <button
               onClick={() => setSelectedOrderDetails(null)}
-              className="w-full bg-black text-white font-bold py-2.5 rounded-full text-xs uppercase mt-4"
+              className="w-full bg-white text-black font-extrabold py-3 rounded-full text-xs uppercase mt-4"
             >
-              Close
+              Close Receipt
             </button>
           </div>
         </div>

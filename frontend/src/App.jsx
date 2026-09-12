@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider, useCart } from './context/CartContext';
 import TopBanner from './components/TopBanner';
 import Navbar from './components/Navbar';
@@ -26,67 +26,59 @@ const GlobalToast = () => {
 };
 
 function MainApp() {
-  const [currentPage, setCurrentPage] = useState(() => {
-    const path = window.location.pathname.toLowerCase();
-    const hash = window.location.hash.toLowerCase();
-    if (path === '/dashboard' || path.startsWith('/dashboard') || hash === '#dashboard') {
-      return 'dashboard';
-    }
-    return 'home';
-  });
+  const { user } = useAuth();
+  const isAdmin = user && (user.role === 'admin' || user.email === 'admin@shop.co');
 
+  // Default entrance is 'dashboard' (Password Gate)
+  const [currentPage, setCurrentPage] = useState('dashboard');
   const [pageParams, setPageParams] = useState({});
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // Sync URL hash/path
+  // Router & Protection Logic:
+  // If not logged in as Admin, lock everything behind 'dashboard' (Login Gate)
   useEffect(() => {
-    const handleLocationCheck = () => {
-      const path = window.location.pathname.toLowerCase();
-      const hash = window.location.hash.toLowerCase();
-      if (path === '/dashboard' || path.startsWith('/dashboard') || hash === '#dashboard') {
-        setCurrentPage('dashboard');
-      }
-    };
-
-    window.addEventListener('popstate', handleLocationCheck);
-    window.addEventListener('hashchange', handleLocationCheck);
-    return () => {
-      window.removeEventListener('popstate', handleLocationCheck);
-      window.removeEventListener('hashchange', handleLocationCheck);
-    };
-  }, []);
+    if (!isAdmin) {
+      setCurrentPage('dashboard');
+    }
+  }, [isAdmin]);
 
   const handleNavigate = (page, params = {}) => {
+    // Force admin gate if not authenticated
+    if (!isAdmin && page !== 'dashboard') {
+      setCurrentPage('dashboard');
+      return;
+    }
     setCurrentPage(page);
     setPageParams(params);
-    if (page === 'dashboard') {
-      window.history.pushState(null, '', '/dashboard');
-    } else if (window.location.pathname === '/dashboard') {
-      window.history.pushState(null, '', '/');
-    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div className="app-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Top Banner */}
+      {/* Show Top Banner only when browsing Storefront as Admin */}
       {currentPage !== 'dashboard' && <TopBanner />}
 
-      {/* Main Navbar */}
-      <Navbar
-        onNavigate={handleNavigate}
-        currentPage={currentPage}
-        onOpenAdmin={() => handleNavigate('dashboard')}
-      />
+      {/* Show Main Navbar only when browsing Storefront */}
+      {currentPage !== 'dashboard' && (
+        <Navbar
+          onNavigate={handleNavigate}
+          currentPage={currentPage}
+          onOpenAdmin={() => handleNavigate('dashboard')}
+        />
+      )}
 
       {/* Dynamic Page Views */}
       <main style={{ flex: 1 }}>
-        {currentPage === 'home' && (
+        {currentPage === 'dashboard' && (
+          <AdminDashboardPage onNavigate={handleNavigate} />
+        )}
+
+        {currentPage === 'home' && isAdmin && (
           <HomePage key={refreshKey} onNavigate={handleNavigate} />
         )}
 
-        {currentPage === 'shop' && (
+        {currentPage === 'shop' && isAdmin && (
           <CategoryPage
             key={refreshKey}
             initialFilter={pageParams.filter || {}}
@@ -94,7 +86,7 @@ function MainApp() {
           />
         )}
 
-        {currentPage === 'product' && (
+        {currentPage === 'product' && isAdmin && (
           <ProductDetailPage
             key={refreshKey}
             productId={pageParams.productId || 'prod-1'}
@@ -102,20 +94,14 @@ function MainApp() {
           />
         )}
 
-        {currentPage === 'cart' && (
+        {currentPage === 'cart' && isAdmin && (
           <CartPage onNavigate={handleNavigate} />
-        )}
-
-        {currentPage === 'dashboard' && (
-          <AdminDashboardPage onNavigate={handleNavigate} />
         )}
       </main>
 
-      {/* Newsletter Subscription Banner */}
+      {/* Storefront Footer & Newsletter (Hidden on Dashboard View) */}
       {currentPage !== 'dashboard' && <NewsletterBanner />}
-
-      {/* Footer */}
-      <Footer onNavigate={handleNavigate} />
+      {currentPage !== 'dashboard' && <Footer onNavigate={handleNavigate} />}
 
       {/* Authentication Modal */}
       <AuthModal />

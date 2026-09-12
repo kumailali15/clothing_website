@@ -314,7 +314,7 @@ const Navbar = ({ onNavigate, currentPage, onOpenAdmin }) => {
 
         {/* Action Icons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          {/* Admin CRUD Dashboard Trigger */}
+          {/* Admin Dashboard Trigger */}
           <button
             onClick={onOpenAdmin}
             style={{
@@ -323,14 +323,15 @@ const Navbar = ({ onNavigate, currentPage, onOpenAdmin }) => {
               gap: '6px',
               backgroundColor: '#000000',
               color: '#ffffff',
-              padding: '6px 14px',
+              padding: '8px 16px',
               borderRadius: 'var(--radius-pill)',
-              fontSize: '0.82rem',
-              fontWeight: 700
+              fontSize: '0.85rem',
+              fontWeight: 800,
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
             }}
-            title="Manage Products (CRUD & Uploads)"
+            title="Return to Admin Dashboard"
           >
-            <Settings size={14} /> Admin
+            <ShieldCheck size={16} /> Admin Dashboard
           </button>
 
           {/* Mobile search trigger */}
