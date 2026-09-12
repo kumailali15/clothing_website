@@ -1,0 +1,92 @@
+[
+  {
+    "id": "rev-1",
+    "productId": "prod-1",
+    "author": "Samantha D.",
+    "verified": true,
+    "rating": 5,
+    "date": "August 14, 2024",
+    "content": "I absolutely love this t-shirt! The design is unique and the fabric feels so comfortable. As an artist, I appreciate the attention to detail. It became my favorite everyday tee instantly!"
+  },
+  {
+    "id": "rev-2",
+    "productId": "prod-1",
+    "author": "Alex M.",
+    "verified": true,
+    "rating": 4.5,
+    "date": "August 16, 2024",
+    "content": "The t-shirt exceeded my expectations! The colors are vibrant and the fabric is premium. The fit is true to size and after multiple washes, the graphic still looks fresh."
+  },
+  {
+    "id": "rev-3",
+    "productId": "prod-1",
+    "author": "Ethan R.",
+    "verified": true,
+    "rating": 5,
+    "date": "August 18, 2024",
+    "content": "This t-shirt is a must-have for anyone who appreciates modern streetwear design. The minimalist aesthetic combined with heavyweight organic cotton makes it stand out."
+  },
+  {
+    "id": "rev-4",
+    "productId": "prod-1",
+    "author": "Olivia P.",
+    "verified": true,
+    "rating": 4,
+    "date": "August 20, 2024",
+    "content": "As someone who's super picky about comfort and textures, this graphic t-shirt definitely hit the mark. Soft, breathable, and fits really well around the shoulders."
+  },
+  {
+    "id": "rev-5",
+    "productId": "prod-1",
+    "author": "Liam K.",
+    "verified": true,
+    "rating": 5,
+    "date": "August 22, 2024",
+    "content": "Super slick graphics and great colorway. Fast shipping as well. Would definitely recommend sizing up if you like an oversized fit!"
+  },
+  {
+    "id": "rev-6",
+    "productId": "prod-1",
+    "author": "Ava H.",
+    "verified": true,
+    "rating": 4.5,
+    "date": "August 25, 2024",
+    "content": "I'm not usually one to write reviews, but the quality here is genuinely top-notch. Love SHOP.CO!"
+  },
+  {
+    "id": "rev-general-1",
+    "productId": null,
+    "author": "Sarah M.",
+    "verified": true,
+    "rating": 5,
+    "date": "July 12, 2024",
+    "content": "I'm blown away by the quality and style of the clothes I received from SHOP.CO. From casual wear to formal dresses, every piece I've bought has exceeded my expectations."
+  },
+  {
+    "id": "rev-general-2",
+    "productId": null,
+    "author": "Alex K.",
+    "verified": true,
+    "rating": 5,
+    "date": "July 18, 2024",
+    "content": "Finding clothes that align with my personal style used to be a challenge until I discovered SHOP.CO. The range of options they offer is truly remarkable, catering to a variety of tastes."
+  },
+  {
+    "id": "rev-general-3",
+    "productId": null,
+    "author": "James L.",
+    "verified": true,
+    "rating": 5,
+    "date": "July 24, 2024",
+    "content": "As someone who's always on the lookout for unique fashion pieces, I'm thrilled to have stumbled upon SHOP.CO. The selection of clothes is not only diverse but also on-trend."
+  },
+  {
+    "id": "rev-general-4",
+    "productId": null,
+    "author": "Mooen X.",
+    "verified": true,
+    "rating": 5,
+    "date": "August 02, 2024",
+    "content": "Quality is unbeatable. The customer service answered all my sizing queries immediately and the delivery arrived 2 days earlier than scheduled!"
+  }
+]

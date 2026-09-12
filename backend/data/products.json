@@ -1,0 +1,496 @@
+[
+  {
+    "id": "prod-1",
+    "title": "One Life Graphic T-shirt",
+    "slug": "one-life-graphic-t-shirt",
+    "category": "t-shirts",
+    "dressStyle": "Casual",
+    "gender": "Men",
+    "price": 260,
+    "originalPrice": 300,
+    "discount": 40,
+    "rating": 4.5,
+    "reviewCount": 89,
+    "isNewArrival": true,
+    "isTopSelling": true,
+    "colors": [
+      { "name": "Olive Green", "hex": "#4F583E" },
+      { "name": "Forest Green", "#314F40": "#314F40" },
+      { "name": "Navy Blue", "hex": "#31344F" }
+    ],
+    "sizes": ["Small", "Medium", "Large", "X-Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&q=80",
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&q=80",
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&q=80"
+    ],
+    "description": "This graphic t-shirt is perfect for any occasion. Crafted from a soft, breathable 100% organic cotton fabric, it offers superior everyday comfort and enduring modern streetwear style.",
+    "details": [
+      "100% Premium Combed Cotton",
+      "Breathable and pre-shrunk fabric",
+      "Durable screen printed chest graphic",
+      "Machine wash cold, tumble dry low"
+    ],
+    "stock": 45
+  },
+  {
+    "id": "prod-2",
+    "title": "Skinny Fit Jeans",
+    "slug": "skinny-fit-jeans",
+    "category": "jeans",
+    "dressStyle": "Casual",
+    "gender": "Men",
+    "price": 240,
+    "originalPrice": 260,
+    "discount": 20,
+    "rating": 3.5,
+    "reviewCount": 42,
+    "isNewArrival": true,
+    "isTopSelling": false,
+    "colors": [
+      { "name": "Classic Indigo", "hex": "#1E293B" },
+      { "name": "Washed Blue", "hex": "#3B82F6" },
+      { "name": "Jet Black", "hex": "#0F172A" }
+    ],
+    "sizes": ["Small", "Medium", "Large", "X-Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1542272604-780c96856592?w=800&q=80",
+      "https://images.unsplash.com/photo-1582552938357-32b906df40cb?w=800&q=80"
+    ],
+    "description": "Contemporary skinny fit denim crafted with built-in flex stretch technology for maximum movement and sleek contouring throughout your day.",
+    "details": [
+      "98% Cotton, 2% Elastane stretch denim",
+      "Zip fly with signature button closure",
+      "Five-pocket classic styling",
+      "Reinforced belt loops"
+    ],
+    "stock": 30
+  },
+  {
+    "id": "prod-3",
+    "title": "Checkered Shirt",
+    "slug": "checkered-shirt",
+    "category": "shirts",
+    "dressStyle": "Casual",
+    "gender": "Men",
+    "price": 180,
+    "originalPrice": null,
+    "discount": null,
+    "rating": 4.5,
+    "reviewCount": 56,
+    "isNewArrival": true,
+    "isTopSelling": false,
+    "colors": [
+      { "name": "Crimson Plaid", "hex": "#881337" },
+      { "name": "Navy Plaid", "hex": "#1E3A8A" }
+    ],
+    "sizes": ["Medium", "Large", "X-Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80",
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&q=80"
+    ],
+    "description": "A timeless checkered button-down shirt woven from brushed cotton twill. Great for layering unbuttoned over a white tee or buttoned up for casual gatherings.",
+    "details": [
+      "Brushed cotton for ultra-soft finish",
+      "Spread collar and curved hem",
+      "Adjustable buttoned cuffs",
+      "Twin chest flap pockets"
+    ],
+    "stock": 25
+  },
+  {
+    "id": "prod-4",
+    "title": "Sleeve Striped T-shirt",
+    "slug": "sleeve-striped-t-shirt",
+    "category": "t-shirts",
+    "dressStyle": "Casual",
+    "gender": "Men",
+    "price": 130,
+    "originalPrice": 160,
+    "discount": 30,
+    "rating": 4.5,
+    "reviewCount": 78,
+    "isNewArrival": true,
+    "isTopSelling": false,
+    "colors": [
+      { "name": "Rust Orange", "hex": "#C2410C" },
+      { "name": "Charcoal Gray", "hex": "#374151" }
+    ],
+    "sizes": ["Small", "Medium", "Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&q=80",
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&q=80"
+    ],
+    "description": "Sporty retro crewneck tee featuring contrast athletic stripes on sleeves and an ultra-soft jersey cotton silhouette.",
+    "details": [
+      "100% Lightweight Ring-Spun Cotton",
+      "Athletic contrast sleeve stripes",
+      "Ribbed collar band"
+    ],
+    "stock": 38
+  },
+  {
+    "id": "prod-5",
+    "title": "Vertical Striped Shirt",
+    "slug": "vertical-striped-shirt",
+    "category": "shirts",
+    "dressStyle": "Formal",
+    "gender": "Men",
+    "price": 212,
+    "originalPrice": 232,
+    "discount": 20,
+    "rating": 5.0,
+    "reviewCount": 110,
+    "isNewArrival": false,
+    "isTopSelling": true,
+    "colors": [
+      { "name": "Emerald Striped", "hex": "#064E3B" },
+      { "name": "Slate Striped", "hex": "#334155" }
+    ],
+    "sizes": ["Small", "Medium", "Large", "X-Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&q=80",
+      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80"
+    ],
+    "description": "Refined vertical striped dress shirt with a relaxed tailored silhouette. Lightweight, breathable, and designed for warm days and evening events.",
+    "details": [
+      "60% Linen, 40% Cotton blend",
+      "Resort Cuban collar style",
+      "Straight hem with side vents"
+    ],
+    "stock": 19
+  },
+  {
+    "id": "prod-6",
+    "title": "Courage Graphic T-shirt",
+    "slug": "courage-graphic-t-shirt",
+    "category": "t-shirts",
+    "dressStyle": "Casual",
+    "gender": "Men",
+    "price": 145,
+    "originalPrice": null,
+    "discount": null,
+    "rating": 4.0,
+    "reviewCount": 35,
+    "isNewArrival": false,
+    "isTopSelling": true,
+    "colors": [
+      { "name": "Electric Orange", "hex": "#EA580C" },
+      { "name": "Pure White", "hex": "#FFFFFF" }
+    ],
+    "sizes": ["Small", "Medium", "Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&q=80"
+    ],
+    "description": "Make an impression with the bold Courage typography front graphic on heavy drop-shoulder organic cotton.",
+    "details": [
+      "Heavyweight 240 GSM organic cotton",
+      "Drop-shoulder boxy silhouette",
+      "High-density discharge print"
+    ],
+    "stock": 50
+  },
+  {
+    "id": "prod-7",
+    "title": "Loose Fit Bermuda Shorts",
+    "slug": "loose-fit-bermuda-shorts",
+    "category": "shorts",
+    "dressStyle": "Casual",
+    "gender": "Men",
+    "price": 80,
+    "originalPrice": null,
+    "discount": null,
+    "rating": 3.0,
+    "reviewCount": 18,
+    "isNewArrival": false,
+    "isTopSelling": true,
+    "colors": [
+      { "name": "Safari Khaki", "hex": "#A38F78" },
+      { "name": "Navy Blue", "hex": "#1E293B" }
+    ],
+    "sizes": ["Medium", "Large", "X-Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=800&q=80"
+    ],
+    "description": "Effortless casual Bermuda shorts with a roomier fit through the thighs and an elasticated waistband with drawstring closure.",
+    "details": [
+      "100% Cotton twill fabric",
+      "Internal drawstring elastic waist",
+      "Side slant pockets & back welt pocket"
+    ],
+    "stock": 24
+  },
+  {
+    "id": "prod-8",
+    "title": "Faded Skinny Jeans",
+    "slug": "faded-skinny-jeans",
+    "category": "jeans",
+    "dressStyle": "Casual",
+    "gender": "Men",
+    "price": 210,
+    "originalPrice": null,
+    "discount": null,
+    "rating": 4.5,
+    "reviewCount": 94,
+    "isNewArrival": false,
+    "isTopSelling": true,
+    "colors": [
+      { "name": "Vintage Wash", "hex": "#64748B" },
+      { "name": "Distressed Blue", "hex": "#3B82F6" }
+    ],
+    "sizes": ["Small", "Medium", "Large", "X-Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1542272604-780c96856592?w=800&q=80"
+    ],
+    "description": "Authentic stone-washed vintage skinny denim with gentle hand sanding and micro-distressing along thigh accents.",
+    "details": [
+      "Premium Japanese stretch denim",
+      "Hand-finished whiskering",
+      "Tailored tapered leg opening"
+    ],
+    "stock": 15
+  },
+  {
+    "id": "prod-9",
+    "title": "Polo with Tipping Details",
+    "slug": "polo-with-tipping-details",
+    "category": "shirts",
+    "dressStyle": "Party",
+    "gender": "Men",
+    "price": 180,
+    "originalPrice": null,
+    "discount": null,
+    "rating": 4.5,
+    "reviewCount": 63,
+    "isNewArrival": true,
+    "isTopSelling": false,
+    "colors": [
+      { "name": "Crimson", "hex": "#7F1D1D" },
+      { "name": "Pure White", "hex": "#F8FAFC" },
+      { "name": "Jet Black", "hex": "#0F172A" }
+    ],
+    "sizes": ["Small", "Medium", "Large", "X-Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=800&q=80",
+      "https://images.unsplash.com/photo-1625910513413-7e44e99f43f0?w=800&q=80"
+    ],
+    "description": "Smart pique cotton polo shirt detailed with fine twin contrast tipping along the rib collar and cuff edges.",
+    "details": [
+      "100% Breathable Mercerized Cotton Pique",
+      "Two-button mother of pearl placket",
+      "Embroidered tonal badge on chest"
+    ],
+    "stock": 35
+  },
+  {
+    "id": "prod-10",
+    "title": "Gradient Graphic T-shirt",
+    "slug": "gradient-graphic-t-shirt",
+    "category": "t-shirts",
+    "dressStyle": "Casual",
+    "gender": "Men",
+    "price": 145,
+    "originalPrice": null,
+    "discount": null,
+    "rating": 3.5,
+    "reviewCount": 29,
+    "isNewArrival": true,
+    "isTopSelling": false,
+    "colors": [
+      { "name": "Optic White", "hex": "#FFFFFF" },
+      { "name": "Heather Grey", "hex": "#94A3B8" }
+    ],
+    "sizes": ["Small", "Medium", "Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&q=80"
+    ],
+    "description": "Vibrant sunset gradient graphic printed on an ultra-soft premium cotton t-shirt designed for laid-back weekend style.",
+    "details": [
+      "Soft spun cotton jersey",
+      "Digital high-resolution gradient art",
+      "Tagless crew neckline for friction-free comfort"
+    ],
+    "stock": 40
+  },
+  {
+    "id": "prod-11",
+    "title": "Minimalist Pullover Hoodie",
+    "slug": "minimalist-pullover-hoodie",
+    "category": "hoodies",
+    "dressStyle": "Casual",
+    "gender": "Unisex",
+    "price": 195,
+    "originalPrice": 240,
+    "discount": 19,
+    "rating": 4.8,
+    "reviewCount": 124,
+    "isNewArrival": false,
+    "isTopSelling": true,
+    "colors": [
+      { "name": "Sand Dune", "hex": "#D4C5B9" },
+      { "name": "Onyx Black", "hex": "#18181B" }
+    ],
+    "sizes": ["Small", "Medium", "Large", "X-Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&q=80",
+      "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=800&q=80"
+    ],
+    "description": "Cozy oversized fleece pullover hoodie featuring kangaroo pouch pocket, double-lined hood, and thick ribbed trims.",
+    "details": [
+      "400 GSM Heavyweight French Terry Fleece",
+      "Seamless kangaroo pocket",
+      "Custom metal aglets on drawcord"
+    ],
+    "stock": 28
+  },
+  {
+    "id": "prod-12",
+    "title": "Gym Performance Tech Tee",
+    "slug": "gym-performance-tech-tee",
+    "category": "t-shirts",
+    "dressStyle": "Gym",
+    "gender": "Men",
+    "price": 75,
+    "originalPrice": 90,
+    "discount": 15,
+    "rating": 4.7,
+    "reviewCount": 82,
+    "isNewArrival": false,
+    "isTopSelling": true,
+    "colors": [
+      { "name": "Cobalt Blue", "hex": "#2563EB" },
+      { "name": "Anthracite", "hex": "#334155" }
+    ],
+    "sizes": ["Small", "Medium", "Large", "X-Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800&q=80"
+    ],
+    "description": "Engineered with quick-dry moisture-wicking technology and 4-way stretch fabric to keep you cool through high-intensity gym training sessions.",
+    "details": [
+      "Hydro-wicking polyester elastane blend",
+      "Anti-odor antimicrobial treatment",
+      "Reflective accents for low light visibility"
+    ],
+    "stock": 60
+  },
+  {
+    "id": "prod-13",
+    "title": "Formal Slim Tailored Blazer",
+    "slug": "formal-slim-tailored-blazer",
+    "category": "jackets",
+    "dressStyle": "Formal",
+    "gender": "Men",
+    "price": 340,
+    "originalPrice": 420,
+    "discount": 20,
+    "rating": 4.9,
+    "reviewCount": 51,
+    "isNewArrival": false,
+    "isTopSelling": false,
+    "colors": [
+      { "name": "Midnight Navy", "hex": "#0F172A" },
+      { "name": "Charcoal Grey", "hex": "#334155" }
+    ],
+    "sizes": ["Medium", "Large", "X-Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80"
+    ],
+    "description": "Sharply tailored single-breasted suit blazer crafted from fine Italian wool blend with notch lapels and structured shoulders.",
+    "details": [
+      "Premium tropical wool blend",
+      "Full satin interior lining",
+      "Double back vent for flexibility"
+    ],
+    "stock": 14
+  },
+  {
+    "id": "prod-14",
+    "title": "Velvet Evening Party Shirt",
+    "slug": "velvet-evening-party-shirt",
+    "category": "shirts",
+    "dressStyle": "Party",
+    "gender": "Men",
+    "price": 220,
+    "originalPrice": 275,
+    "discount": 20,
+    "rating": 4.6,
+    "reviewCount": 39,
+    "isNewArrival": true,
+    "isTopSelling": false,
+    "colors": [
+      { "name": "Deep Burgundy", "hex": "#4C0519" },
+      { "name": "Emerald Night", "hex": "#022C22" }
+    ],
+    "sizes": ["Small", "Medium", "Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&q=80"
+    ],
+    "description": "Luxurious crushed velvet shirt made for late night festivities, club events, and standout social dinners.",
+    "details": [
+      "Silky velvet touch with slight stretch",
+      "Metallic snap button closure",
+      "Slightly tapered modern party cut"
+    ],
+    "stock": 18
+  },
+  {
+    "id": "prod-15",
+    "title": "Classic Denim Trucker Jacket",
+    "slug": "classic-denim-trucker-jacket",
+    "category": "jackets",
+    "dressStyle": "Casual",
+    "gender": "Unisex",
+    "price": 290,
+    "originalPrice": 350,
+    "discount": 17,
+    "rating": 4.8,
+    "reviewCount": 105,
+    "isNewArrival": false,
+    "isTopSelling": true,
+    "colors": [
+      { "name": "Heritage Stonewash", "hex": "#3B82F6" },
+      { "name": "Faded Black", "hex": "#1F2937" }
+    ],
+    "sizes": ["Small", "Medium", "Large", "X-Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=800&q=80"
+    ],
+    "description": "The quintessential denim trucker jacket with button-through chest pockets, side adjusters, and rugged heavy-duty cotton twill.",
+    "details": [
+      "13.5 oz Raw Ring-Spun Cotton Denim",
+      "Custom branded copper hardware",
+      "Dual welt hand warmer pockets"
+    ],
+    "stock": 22
+  },
+  {
+    "id": "prod-16",
+    "title": "Gym Athletic Training Joggers",
+    "slug": "gym-athletic-training-joggers",
+    "category": "jeans",
+    "dressStyle": "Gym",
+    "gender": "Men",
+    "price": 110,
+    "originalPrice": 140,
+    "discount": 21,
+    "rating": 4.6,
+    "reviewCount": 73,
+    "isNewArrival": false,
+    "isTopSelling": false,
+    "colors": [
+      { "name": "Space Grey", "hex": "#475569" },
+      { "name": "Matte Black", "hex": "#0F172A" }
+    ],
+    "sizes": ["Small", "Medium", "Large", "X-Large"],
+    "images": [
+      "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?w=800&q=80"
+    ],
+    "description": "Tapered training joggers equipped with zipper security pockets, breathable knee ventilation, and an articulated knee gusset.",
+    "details": [
+      "4-Way Stretch Interlock Knit",
+      "Concealed waterproof zip pocket",
+      "Cuffed ankle hems"
+    ],
+    "stock": 44
+  }
+]

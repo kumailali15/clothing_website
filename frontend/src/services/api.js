@@ -1,0 +1,110 @@
+const API_BASE_URL = 'http://localhost:5000/api';
+
+export const api = {
+  // Products
+  async getProducts(params = {}) {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([key, val]) => {
+      if (val !== undefined && val !== null && val !== '') {
+        query.append(key, val);
+      }
+    });
+    const res = await fetch(`${API_BASE_URL}/products?${query.toString()}`);
+    if (!res.ok) throw new Error('Failed to fetch products');
+    return res.json();
+  },
+
+  async getFeaturedProducts() {
+    const res = await fetch(`${API_BASE_URL}/products/featured`);
+    if (!res.ok) throw new Error('Failed to fetch featured products');
+    return res.json();
+  },
+
+  async getProductById(id) {
+    const res = await fetch(`${API_BASE_URL}/products/${id}`);
+    if (!res.ok) throw new Error('Failed to fetch product');
+    return res.json();
+  },
+
+  // Reviews
+  async getReviews(productId) {
+    const url = productId 
+      ? `${API_BASE_URL}/reviews?productId=${productId}` 
+      : `${API_BASE_URL}/reviews`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Failed to fetch reviews');
+    return res.json();
+  },
+
+  async addReview(reviewData) {
+    const res = await fetch(`${API_BASE_URL}/reviews`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(reviewData)
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Failed to submit review');
+    }
+    return res.json();
+  },
+
+  // Auth
+  async register(userData) {
+    const res = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Registration failed');
+    return data;
+  },
+
+  async login(credentials) {
+    const res = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Login failed');
+    return data;
+  },
+
+  // Orders
+  async createOrder(orderData) {
+    const res = await fetch(`${API_BASE_URL}/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to place order');
+    return data;
+  },
+
+  // Coupons
+  async validateCoupon(code) {
+    const res = await fetch(`${API_BASE_URL}/coupons/validate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Invalid promo code');
+    return data;
+  },
+
+  // Newsletter
+  async subscribeNewsletter(email) {
+    const res = await fetch(`${API_BASE_URL}/newsletter`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Subscription failed');
+    return data;
+  }
+};
