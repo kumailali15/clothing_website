@@ -51,4 +51,43 @@ router.post('/', (req, res) => {
   });
 });
 
+// PUT /api/orders/:id - Update order status
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!status) {
+    return res.status(400).json({ error: 'Status is required' });
+  }
+
+  const orders = readData('orders.json');
+  const index = orders.findIndex(o => o.id.toLowerCase() === id.toLowerCase());
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Order not found' });
+  }
+
+  orders[index].status = status;
+  orders[index].updatedAt = new Date().toISOString();
+  writeData('orders.json', orders);
+
+  res.json({ message: 'Order status updated', order: orders[index] });
+});
+
+// DELETE /api/orders/:id - Delete order
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  let orders = readData('orders.json');
+  const initialLength = orders.length;
+
+  orders = orders.filter(o => o.id.toLowerCase() !== id.toLowerCase());
+
+  if (orders.length === initialLength) {
+    return res.status(404).json({ error: 'Order not found' });
+  }
+
+  writeData('orders.json', orders);
+  res.json({ message: 'Order deleted successfully', id });
+});
+
 module.exports = router;

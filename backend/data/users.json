@@ -1,9 +1,18 @@
 [
   {
+    "id": "usr-admin-1",
+    "name": "Super Admin",
+    "email": "admin@shop.co",
+    "password": "admin123456",
+    "role": "admin",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
     "id": "usr-1",
     "name": "Hamza Naeem",
     "email": "hamza@example.com",
     "password": "password123",
+    "role": "user",
     "createdAt": "2024-01-10T12:00:00.000Z"
   }
 ]

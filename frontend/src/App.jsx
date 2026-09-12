@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider, useCart } from './context/CartContext';
 import TopBanner from './components/TopBanner';
@@ -12,6 +12,7 @@ import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
 
 // Toast Notification Consumer
 const GlobalToast = () => {
@@ -25,27 +26,58 @@ const GlobalToast = () => {
 };
 
 function MainApp() {
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState(() => {
+    const path = window.location.pathname.toLowerCase();
+    const hash = window.location.hash.toLowerCase();
+    if (path === '/dashboard' || path.startsWith('/dashboard') || hash === '#dashboard') {
+      return 'dashboard';
+    }
+    return 'home';
+  });
+
   const [pageParams, setPageParams] = useState({});
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
+  // Sync URL hash/path
+  useEffect(() => {
+    const handleLocationCheck = () => {
+      const path = window.location.pathname.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      if (path === '/dashboard' || path.startsWith('/dashboard') || hash === '#dashboard') {
+        setCurrentPage('dashboard');
+      }
+    };
+
+    window.addEventListener('popstate', handleLocationCheck);
+    window.addEventListener('hashchange', handleLocationCheck);
+    return () => {
+      window.removeEventListener('popstate', handleLocationCheck);
+      window.removeEventListener('hashchange', handleLocationCheck);
+    };
+  }, []);
+
   const handleNavigate = (page, params = {}) => {
     setCurrentPage(page);
     setPageParams(params);
+    if (page === 'dashboard') {
+      window.history.pushState(null, '', '/dashboard');
+    } else if (window.location.pathname === '/dashboard') {
+      window.history.pushState(null, '', '/');
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div className="app-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Top Banner */}
-      <TopBanner />
+      {currentPage !== 'dashboard' && <TopBanner />}
 
       {/* Main Navbar */}
       <Navbar
         onNavigate={handleNavigate}
         currentPage={currentPage}
-        onOpenAdmin={() => setIsAdminModalOpen(true)}
+        onOpenAdmin={() => handleNavigate('dashboard')}
       />
 
       {/* Dynamic Page Views */}
@@ -73,10 +105,14 @@ function MainApp() {
         {currentPage === 'cart' && (
           <CartPage onNavigate={handleNavigate} />
         )}
+
+        {currentPage === 'dashboard' && (
+          <AdminDashboardPage onNavigate={handleNavigate} />
+        )}
       </main>
 
       {/* Newsletter Subscription Banner */}
-      <NewsletterBanner />
+      {currentPage !== 'dashboard' && <NewsletterBanner />}
 
       {/* Footer */}
       <Footer onNavigate={handleNavigate} />
@@ -84,7 +120,7 @@ function MainApp() {
       {/* Authentication Modal */}
       <AuthModal />
 
-      {/* Admin CRUD & Multer Upload Modal */}
+      {/* Quick Admin Product CRUD & Multer Upload Modal */}
       <AdminProductModal
         isOpen={isAdminModalOpen}
         onClose={() => setIsAdminModalOpen(false)}

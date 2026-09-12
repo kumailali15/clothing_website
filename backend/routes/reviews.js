@@ -54,4 +54,20 @@ router.post('/', (req, res) => {
   res.status(201).json(newReview);
 });
 
+// DELETE /api/reviews/:id - Delete a review
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  let reviews = readData('reviews.json');
+  const initialLength = reviews.length;
+
+  reviews = reviews.filter(r => r.id !== id);
+
+  if (reviews.length === initialLength) {
+    return res.status(404).json({ error: 'Review not found' });
+  }
+
+  writeData('reviews.json', reviews);
+  res.json({ message: 'Review deleted successfully', id });
+});
+
 module.exports = router;

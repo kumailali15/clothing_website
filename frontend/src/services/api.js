@@ -151,5 +151,49 @@ export const api = {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed to delete product');
     return data;
+  },
+
+  // Admin Orders Management
+  async getOrders() {
+    const res = await fetch(`${API_BASE_URL}/orders`);
+    if (!res.ok) throw new Error('Failed to fetch orders');
+    return res.json();
+  },
+
+  async updateOrderStatus(id, status) {
+    const res = await fetch(`${API_BASE_URL}/orders/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to update order status');
+    return data;
+  },
+
+  async deleteOrder(id) {
+    const res = await fetch(`${API_BASE_URL}/orders/${id}`, {
+      method: 'DELETE'
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to delete order');
+    return data;
+  },
+
+  // Admin Reviews Management
+  async deleteReview(id) {
+    const res = await fetch(`${API_BASE_URL}/reviews/${id}`, {
+      method: 'DELETE'
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to delete review');
+    return data;
+  },
+
+  // Admin Users List
+  async getUsers() {
+    const res = await fetch(`${API_BASE_URL}/auth/users`);
+    if (!res.ok) throw new Error('Failed to fetch users list');
+    return res.json();
   }
 };
