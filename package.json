@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "Fullstack E-Commerce Store recreation of SHOP.CO Figma design using React.js and Express.js with JSON file storage",
   "scripts": {
-    "start:backend": "cd backend && node server.js",
-    "start:frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm install && npm run build",
+    "start": "cd backend && node server.js",
+    "dev:backend": "cd backend && node server.js",
+    "dev:frontend": "cd frontend && npm run dev",
     "build:frontend": "cd frontend && npm run build"
   },
   "keywords": ["react", "express", "ecommerce", "figma", "shopco"],

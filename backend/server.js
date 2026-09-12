@@ -47,12 +47,29 @@ app.use('/api/auth', authRoute);
 app.use('/api/orders', ordersRoute);
 app.use('/api/coupons', couponsRoute);
 
+// Serve static frontend build if available (for unified fullstack deployments)
+const fs = require('fs');
+const distPath = path.join(__dirname, '../frontend/dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(distPath, 'index.html'));
+    }
+  });
+}
+
 // Global error handler
 app.use((err, req, res, next) => {
   console.error('Server error:', err);
   res.status(500).json({ error: 'Internal Server Error', details: err.message });
 });
 
-app.listen(PORT, () => {
-  console.log(`SHOP.CO Backend server is running on http://localhost:${PORT}`);
-});
+// Start listener only when run directly (e.g. node server.js)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`SHOP.CO Backend server is running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
